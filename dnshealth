@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+
+require 'resolv'
+require 'optparse'
+
+CLEAR      = "\e[0m"
+BOLD       = "\e[1m"
+BLACK      = "\e[30m"
+RED        = "\e[31m"
+GREEN      = "\e[32m"
+YELLOW     = "\e[33m"
+BLUE       = "\e[34m"
+MAGENTA    = "\e[35m"
+CYAN       = "\e[36m"
+WHITE      = "\e[37m"
+ON_BLACK   = "\e[40m"
+ON_RED     = "\e[41m"
+ON_GREEN   = "\e[42m"
+ON_YELLOW  = "\e[43m"
+ON_BLUE    = "\e[44m"
+ON_MAGENTA = "\e[45m"
+ON_CYAN    = "\e[46m"
+ON_WHITE   = "\e[47m"
+
+verbose = 1
+
+(opts = OptionParser.new do |opts|
+  opts.banner = "Usage:\n  #{$0} [options] domain"
+  opts.on("-v", "--verbose", "Turn up the verbosity") { |v| verbose += 1 }
+  opts.on("-q", "--quiet",   "Only print errors")     { |v| verbose  = 0 }
+  opts.on_tail("-h", "--help") { puts opts; exit }
+end).parse!
+
+domain = ARGV[0] or (puts "#{opts}"; exit)
+
+resolver = Resolv::DNS.new
+
+nses = resolver.getresources domain, Resolv::DNS::Resource::IN::NS
+master_soa = resolver.getresource domain, Resolv::DNS::Resource::IN::SOA
+
+puts "#{YELLOW+domain+CLEAR} has #{nses.length} nameservers:"
+
+nses.each do |ns|
+  printf "  #{ns.name.to_s == master_soa.mname.to_s ? BOLD+WHITE : CYAN}%*s#{CLEAR}", nses.map {|ns| ns.name.to_s.length }.max, ns.name.to_s
+
+  nsr = Resolv::DNS.new :nameserver => ns.name.to_s
+
+  begin
+    soa = nsr.getresource domain, Resolv::DNS::Resource::IN::SOA
+
+    puts " serial: #{soa.serial}"
+  rescue => e
+    puts " #{RED}#{e}#{CLEAR}"
+  end
+end
