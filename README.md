@@ -17,6 +17,10 @@ secondary servers wasn't updating properly.
       ns3130.dns.dyn.com serial: 1345928328
       ns4196.dns.dyn.com serial: 1345928328
 
+Here's a screenshot in glorious color:
+
+![Screenshot](screenshot.png)
+
 The master DNS server is highlighted in white. Secondaries are cyan. Errors
 are red.
 
