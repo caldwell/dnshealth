@@ -19,7 +19,7 @@ secondary servers wasn't updating properly.
 
 Here's a screenshot in glorious color:
 
-![Screenshot](dnshealth/master/screenshot.png)
+![Screenshot](dnshealth/raw/master/screenshot.png)
 
 The master DNS server is highlighted in white. Secondaries are cyan. Errors
 are red.
