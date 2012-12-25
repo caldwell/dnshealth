@@ -42,7 +42,7 @@ master_soa = resolver.getresource domain, Resolv::DNS::Resource::IN::SOA
 puts "#{YELLOW+domain+CLEAR} has #{nses.length} nameservers:"
 
 nses.each do |ns|
-  printf "  #{ns.name.to_s == master_soa.mname.to_s ? BOLD+WHITE : CYAN}%*s#{CLEAR}", nses.map {|ns| ns.name.to_s.length }.max, ns.name.to_s
+  printf "  #{ns.name.to_s == master_soa.mname.to_s ? BOLD+WHITE : CYAN}%*s#{CLEAR}", nses.map {|n| n.name.to_s.length }.max, ns.name.to_s
 
   nsr = Resolv::DNS.new :nameserver => ns.name.to_s
 
